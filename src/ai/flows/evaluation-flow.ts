@@ -6,9 +6,13 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 import { db } from '@/lib/db';
-import { QuestionOutput, QuestionOutputSchema, getQuestionsByTest } from './question-flow';
+import { QuestionOutput, getQuestionsByTest } from './question-flow';
 import { UserOutput, getUserById } from './user-flow';
 import { TestOutput, getTestById } from './test-flow';
+import { UserOutputSchema } from '../schemas/user-schemas';
+import { TestOutputSchema } from '../schemas/test-schemas';
+import { QuestionOutputSchema } from '../schemas/question-schemas';
+
 
 const AnswerSchema = z.object({
   id: z.string(),
@@ -19,7 +23,7 @@ const AnswerSchema = z.object({
 
 const SubmissionEvaluationSchema = z.object({
   id: z.string(),
-  submitted_at: z.date(),
+  submitted_at: z.string(),
   status: z.enum(['Pending', 'Graded']),
   final_score: z.number().nullable(),
   mcq_score: z.number().nullable(),
@@ -34,8 +38,8 @@ const QuestionStatsSchema = z.object({
 // Use the exported schemas from the other flows directly
 const EvaluationDataSchema = z.object({
   submission: SubmissionEvaluationSchema,
-  student: UserOutput,
-  test: TestOutput,
+  student: UserOutputSchema,
+  test: TestOutputSchema,
   questions: z.array(QuestionOutputSchema),
   questionStats: z.array(QuestionStatsSchema),
 });
@@ -80,6 +84,7 @@ const getEvaluationDataFlow = ai.defineFlow({
     return {
         submission: {
             ...submission,
+            submitted_at: submission.submitted_at.toISOString(), // Convert Date to ISO string
             answers: answers.map(a => ({
                 id: a.id,
                 question_id: a.question_id,
