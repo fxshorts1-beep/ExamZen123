@@ -7,8 +7,8 @@ import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 import { db } from '@/lib/db';
 import { QuestionOutput, QuestionOutputSchema, getQuestionsByTest } from './question-flow';
-import { UserOutput, UserOutputSchema, getUserById } from './user-flow';
-import { TestOutput, TestOutputSchema, getTestById } from './test-flow';
+import { UserOutput, getUserById } from './user-flow';
+import { TestOutput, getTestById } from './test-flow';
 
 const AnswerSchema = z.object({
   id: z.string(),
@@ -31,10 +31,11 @@ const QuestionStatsSchema = z.object({
   skipPercentage: z.number(),
 });
 
+// Use the exported schemas from the other flows directly
 const EvaluationDataSchema = z.object({
   submission: SubmissionEvaluationSchema,
-  student: UserOutputSchema,
-  test: TestOutputSchema,
+  student: UserOutput,
+  test: TestOutput,
   questions: z.array(QuestionOutputSchema),
   questionStats: z.array(QuestionStatsSchema),
 });
