@@ -8,6 +8,8 @@ import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 import { db } from '@/lib/db';
 import { User } from '@/lib/types';
+import { UserOutputSchema } from '../schemas/user-schemas';
+
 
 // Schema for user registration (only students)
 const RegisterStudentInputSchema = z.object({
@@ -20,16 +22,7 @@ const RegisterStudentInputSchema = z.object({
 });
 export type RegisterStudentInput = z.infer<typeof RegisterStudentInputSchema>;
 
-export const UserOutputSchema = z.object({
-  id: z.string(),
-  username: z.string(),
-  email: z.string().email(),
-  role: z.enum(['student', 'teacher', 'admin']),
-  profile_pic_url: z.string().optional(),
-  status: z.enum(['active', 'banned', 'muted', 'locked']).optional().default('active'),
-  class: z.string().optional(),
-  section: z.string().optional(),
-});
+
 export type UserOutput = z.infer<typeof UserOutputSchema>;
 
 
