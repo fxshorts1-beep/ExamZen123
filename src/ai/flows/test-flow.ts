@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { db } from '@/lib/db';
 import { Test } from '@/lib/types';
 import { createQuestion, CreateQuestionInput } from './question-flow';
+import { TestOutputSchema } from '../schemas/test-schemas';
 
 const QuestionInputSchema = z.object({
   question_text: z.string(),
@@ -58,14 +59,7 @@ const CreateTestInputSchema = z.object({
 });
 export type CreateTestInput = z.infer<typeof CreateTestInputSchema>;
 
-export const TestOutputSchema = z.object({
-    id: z.string(),
-    title: z.string(),
-    description: z.string(),
-    subject: z.string(),
-    time_limit: z.number(),
-    created_by: z.string(),
-});
+
 export type TestOutput = z.infer<typeof TestOutputSchema>;
 
 // Flow for creating a test with questions
